@@ -52,6 +52,7 @@ def speech_to_text(audio_data):
 
     try:
         # Transcribe the flattened audio data
+        print("Transcribing... " + os.path.abspath("recording.wav"))
         result = whisper.transcribe(os.path.abspath("recording.wav"))
         transcription = whisper.extract_text(result)
         return transcription
