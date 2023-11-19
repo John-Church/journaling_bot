@@ -52,7 +52,7 @@ def speech_to_text(audio_data):
 
     try:
         # Transcribe the flattened audio data
-        result = whisper.transcribe("recording.wav")
+        result = whisper.transcribe("./recording.wav")
         transcription = whisper.extract_text(result)
         return transcription
     except Exception as e:
@@ -70,7 +70,6 @@ def summarize_text(text):
 
     response = requests.post("http://localhost:11434/api/generate", json=data)
 
-    print(response)
     if response.status_code == 200:
         return response.json()["response"]
     else:
@@ -91,7 +90,7 @@ def main():
 
         audio_data = record_audio()  # Starts recording
 
-        typer.echo("Recording stopped. Processing your audio...")
+        typer.echo("Processing your audio...")
 
         transcribed_text = speech_to_text(audio_data)
         typer.echo("Transcribed Text: ")
