@@ -3,9 +3,7 @@ import sounddevice as sd
 import numpy as np
 import requests
 import os
-import json
 from datetime import datetime
-import keyboard
 from dotenv import load_dotenv
 import soundfile as sf
 import threading
@@ -39,8 +37,9 @@ def record_audio(fs=44100):
 
 from whispercpp import Whisper
 
-# Initialize Whisper
-whisper = Whisper("medium")
+# Initialize Whisper with model from .env
+whisper_model = os.getenv("WHISPER_MODEL", "medium")
+whisper = Whisper(whisper_model)
 
 
 def speech_to_text(audio_data):
@@ -59,8 +58,9 @@ def speech_to_text(audio_data):
 
 
 def summarize_text(text):
+    model = os.getenv("TEXT_MODEL", "mistral")
     data = {
-        "model": "mistral",
+        "model": model,
         "prompt": f"The following text is a recording of the user's thoughts. These thoughts may be somwhat disorganized. Your goal is to organize the thoughts and format them in markdown format. Always quote verbatim when possible and do not add anything that is not present in the original but also you can make some superficial changes to make the sentence flow more natural as long as it does not change the meaning. Feel free to add headers. Here is the text: {text}",
         "stream": False,
     }
@@ -99,8 +99,13 @@ def main():
         typer.echo(markdown_text)
 
         if not typer.confirm("Do you want to record again?"):
+            journal_path = os.path.expanduser(os.getenv("JOURNAL_PATH", "journal/"))
+
+            if not os.path.exists(journal_path):
+                os.makedirs(journal_path)
+
             file_name = (
-                f"/journal/Journal_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+                f"{journal_path}Journal_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
             )
             with open(file_name, "w") as file:
                 file.write(markdown_text)
