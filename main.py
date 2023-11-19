@@ -31,6 +31,9 @@ def record_audio(fs=44100):
         stream.start()
         input("Press Enter to stop recording...")  # Wait for keypress
         recording_stopped.set()
+        typer.echo(
+            f"🔵 Recording stopped. Recorded {len(np.concatenate(recording, axis=0))} frames."
+        )
 
     return np.concatenate(recording, axis=0)
 
