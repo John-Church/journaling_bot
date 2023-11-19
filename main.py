@@ -99,7 +99,9 @@ def main():
         typer.echo(markdown_text)
 
         if not typer.confirm("Do you want to record again?"):
-            file_name = f"Journal_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+            file_name = (
+                f"/journal/Journal_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+            )
             with open(file_name, "w") as file:
                 file.write(markdown_text)
             typer.echo(f"Saved to {file_name}")
