@@ -45,7 +45,9 @@ whisper = Whisper(whisper_model)
 def speech_to_text(audio_data):
     # Flatten the audio data to one dimension
     flattened_audio = audio_data.flatten()
-    sf.write("recording.wav", flattened_audio, 44100)
+    # Write the audio data to a file, creating it if it doesn't exist
+    with open("recording.wav", "w") as file:
+        sf.write(file, flattened_audio, 44100)
 
     try:
         # Transcribe the flattened audio data
